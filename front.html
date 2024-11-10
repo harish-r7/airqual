@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register Form</title>
+    <style>
+        /* Style Section */
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            color: #000000;
+        }
+
+        .hero {
+            height: 100vh;
+            width: 100%;
+            background-image: url("background.webp"), linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 380px;
+            height: 480px;
+            position: relative;
+            background: rgba(215, 211, 252, 0.9);
+            padding: 5px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-box {
+            width: 220px;
+            margin: 40px auto;
+            position: relative;
+            box-shadow: 0px 0px 10px 0px #0000001f;
+            border-radius: 30px;
+        }
+
+        .toggle-btn {
+            padding: 10px 30px;
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            outline: none;
+            position: relative;
+        }
+
+        #btn {
+            position: absolute;
+            width: 120px;
+            height: 100%;
+            border-radius: 30px;
+            background: linear-gradient(to left, #13e024, #0ca2a5);
+            transition: .5s;
+        }
+
+        .input-group {
+            position: absolute;
+            width: 280px;
+            transition: .5s;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 0;
+            margin: 5px 0;
+            border: 0;
+            border-bottom: 1px solid #999;
+            outline: none;
+            background: transparent;
+        }
+
+        .submit-btn {
+            width: 85%;
+            padding: 10px 10px;
+            cursor: pointer;
+            display: block;
+            margin: auto;
+            background: linear-gradient(to right, #ff105f, #ffad06);
+            border: 0;
+            border-radius: 30px;
+        }
+
+        .check-box {
+            margin: 30px 10px 10px 0;
+        }
+
+        span {
+            color: #000000;
+            font-size: 12px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none; /* Hidden by default */
+        }
+
+        #login {
+            left: 50px;
+        }
+
+        #register {
+            left: 450px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .form-box {
+                width: 90%;
+                height: auto;
+            }
+
+            .input-group {
+                width: 100%;
+            }
+
+            .input-field {
+                padding: 8px 0;
+            }
+
+            .submit-btn {
+                width: 90%;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .form-box {
+                width: 95%;
+                height: auto;
+            }
+
+            .button-box {
+                width: 100%;
+                margin: 20px auto;
+            }
+
+            .input-group {
+                width: 100%;
+                top: 130px;
+            }
+
+            .input-field {
+                padding: 6px 0;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="login()">Log-in</button>
+                <button type="button" class="toggle-btn" onclick="register()">Register</button>
+            </div>
+            <!-- Login Form -->
+            <form id="login" class="input-group" method="POST" action="login.php" onsubmit="return validateLoginForm()">
+                <input type="text" name="login-username" id="login-username" class="input-field" placeholder="Username" required>
+                <input type="password" name="login-password" id="login-password" class="input-field" placeholder="Password" required>
+                <input type="checkbox" class="check-box"><span>Remember password</span>
+                <button type="submit" class="submit-btn">Log in</button>
+                <div class="error-message" id="login-error"></div>
+            </form>
+            <!-- Register Form -->
+            <form id="register" class="input-group" method="POST" action="register.php" onsubmit="return validateRegisterForm()">
+                <input type="text" name="reg-username" id="reg-username" class="input-field" placeholder="Username" required>
+                <input type="email" name="reg-email" id="reg-email" class="input-field" placeholder="Email Id" required>
+                <input type="password" name="reg-password" id="reg-password" class="input-field" placeholder="Password" required>
+                <input type="password" name="reg-confirm-password" id="reg-confirm-password" class="input-field" placeholder="Confirm Password" required>
+                <div class="error-message" id="confirm-password-error"></div>
+                <input type="checkbox" class="check-box"><span>I agree to the terms and conditions</span>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateLoginForm() {
+            const username = document.getElementById("login-username").value.trim();
+            const password = document.getElementById("login-password").value.trim();
+            document.getElementById("login-error").style.display = "none";
+
+            if (!username || !password) {
+                document.getElementById("login-error").textContent = "All fields are required.";
+                document.getElementById("login-error").style.display = "block";
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateRegisterForm() {
+            const password = document.getElementById("reg-password").value.trim();
+            const confirmPassword = document.getElementById("reg-confirm-password").value.trim();
+            const confirmPasswordError = document.getElementById("confirm-password-error");
+
+            confirmPasswordError.style.display = "none"; // Reset error message
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match.";
+                confirmPasswordError.style.display = "block";
+                return false;
+            }
+
+            return true;
+        }
+
+        function register() {
+            document.getElementById("login").style.left = "-400px";
+            document.getElementById("register").style.left = "50px";
+            document.getElementById("btn").style.left = "100px";
+        }
+
+        function login() {
+            document.getElementById("login").style.left = "50px";
+            document.getElementById("register").style.left = "450px";
+            document.getElementById("btn").style.left = "0px";
+        }
+    </script>
+</body>
+</html>
